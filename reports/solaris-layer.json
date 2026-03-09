@@ -1,0 +1,42 @@
+{
+    "name": "Solaris Care Connect 360 - Threat Coverage",
+    "versions": { "attack": "14", "navigator": "4.9.0", "layer": "4.5" },
+    "domain": "enterprise-attack",
+    "description": "STRIDE threat model coverage for Solaris Care Connect 360 healthcare platform",
+    "techniques": [
+      { "techniqueID": "T1566.001", "color": "#ff6666", "comment": "S1 - Credential Theft via Phishing", "score": 3 },
+      { "techniqueID": "T1136.001", "color": "#ff6666", "comment": "S2 - Fake Doctor Accounts", "score": 3 },
+      { "techniqueID": "T1528",     "color": "#ff9900", "comment": "S3 - Token Forgery", "score": 2 },
+      { "techniqueID": "T1557",     "color": "#ffcc00", "comment": "S4 - MITM on Insurance API", "score": 1 },
+      { "techniqueID": "T1195",     "color": "#ff6666", "comment": "S5 - Lab Result Spoofing", "score": 3 },
+      { "techniqueID": "T1565.001", "color": "#ff6666", "comment": "T1/T2 - Record & Prescription Tampering", "score": 3 },
+      { "techniqueID": "T1565.002", "color": "#ff6666", "comment": "T5 - Vitals Data Tampering", "score": 3 },
+      { "techniqueID": "T1070",     "color": "#ff9900", "comment": "T3/R1 - Audit Log Tampering & Prescription Denial", "score": 2 },
+      { "techniqueID": "T1530",     "color": "#ff9900", "comment": "R5/I5 - Exposed Backups & Export Audit Gap", "score": 2 },
+      { "techniqueID": "T1190",     "color": "#ff6666", "comment": "I1/E3 - SQL Injection", "score": 3 },
+      { "techniqueID": "T1213",     "color": "#ff9900", "comment": "I2 - Excessive Data Return", "score": 2 },
+      { "techniqueID": "T1040",     "color": "#ff6666", "comment": "I4 - Unencrypted Data in Transit", "score": 3 },
+      { "techniqueID": "T1498",     "color": "#ff9900", "comment": "D1 - DDoS Attack", "score": 2 },
+      { "techniqueID": "T1110",     "color": "#ffcc00", "comment": "D4 - Mass Account Lockout", "score": 1 },
+      { "techniqueID": "T1499",     "color": "#ff9900", "comment": "D2/D5 - DB & Service Exhaustion", "score": 2 },
+      { "techniqueID": "T1078",     "color": "#ff6666", "comment": "E1/E2 - Privilege Escalation", "score": 3 },
+      { "techniqueID": "T1611",     "color": "#ff6666", "comment": "E4 - Container Escape", "score": 3 },
+      { "techniqueID": "T1548",     "color": "#ff9900", "comment": "E5 - IDOR", "score": 2 },
+      { "techniqueID": "T1486",     "color": "#ff6666", "comment": "Ransomware - Data Encrypted for Impact", "score": 3 },
+      { "techniqueID": "T1567",     "color": "#ff9900", "comment": "Exfiltration via Web Service", "score": 2 }
+    ],
+    "gradient": {
+      "colors": ["#ffffff", "#ffcc00", "#ff6666"],
+      "minValue": 0,
+      "maxValue": 3
+    },
+    "legendItems": [
+      { "label": "Critical", "color": "#ff6666" },
+      { "label": "High", "color": "#ff9900" },
+      { "label": "Medium", "color": "#ffcc00" }
+    ],
+    "showTacticRowBackground": true,
+    "tacticRowBackground": "#1a1a2e",
+    "selectTechniquesAcrossTactics": false
+  }
+  
