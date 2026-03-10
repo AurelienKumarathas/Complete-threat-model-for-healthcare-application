@@ -8,8 +8,7 @@ Healthcare platform threat model using STRIDE, MITRE ATT&amp;CK, Cyber Kill Chai
 ![STRIDE](https://img.shields.io/badge/Framework-STRIDE-blue?style=for-the-badge)
 ![NIST CSF](https://img.shields.io/badge/Standard-NIST%20CSF-green?style=for-the-badge)
 ![NHS DSPT](https://img.shields.io/badge/Compliance-NHS%20DSPT-0072CE?style=for-the-badge)
-![Last Commit](https://img.shields.io/github/last-commit/AurelienKumarathas/Complete-threat-model-for-healthcare-application)
-![License](https://img.shields.io/github/license/AurelienKumarathas/Complete-threat-model-for-healthcare-application)
+
 
 > A **production-grade threat model** for a cloud-native healthcare application — identifying 25 threats across 6 categories, mapped to MITRE ATT&CK, scored with DREAD, and paired with a prioritised remediation roadmap. Built to demonstrate real-world security engineering applied to systems handling patient PHI under NHS DSPT and UK GDPR obligations.
 
@@ -115,9 +114,10 @@ flowchart TD
     RecordSvc --> S3
     API --> Audit
 
-    style DataLayer fill:#2d1b1b,color:#ff6b6b
-    style DMZ fill:#2d2d1b,color:#ffcc00
-    style AppLayer fill:#1b2d1b,color:#6bff6b
+    style Internet fill:#fffde7,color:#333,stroke:#f0c000
+    style DMZ fill:#fff3e0,color:#333,stroke:#ff9800
+    style AppLayer fill:#e8f5e9,color:#333,stroke:#4caf50
+    style DataLayer fill:#ffebee,color:#333,stroke:#f44336
 ```
 
 ---
