@@ -91,8 +91,8 @@
 
 | Severity | Count | Threat IDs |
 |----------|-------|------------|
-| 🔴 Critical | 10 | S2, S5, T1, T2, T5, I1, I4, I5, E1, E2, E3, E4 |
-| 🟠 High | 11 | S1, S3, T3, T4, R1, R3, R5, I2, I6, D1, D2, D5, E5 |
-| 🟡 Medium | 4 | S4, R2, R4, I3, D3, D4 |
+| 🔴 Critical | 12 | S2, S5, T1, T2, T5, I1, I4, I5, E1, E2, E3, E4 |
+| 🟠 High | 13 | S1, S3, T3, T4, R1, R3, R5, I2, I6, D1, D2, D5, E5 |
+| 🟡 Medium | 6 | S4, R2, R4, I3, D3, D4 |
 
 > ⚠️ All Critical threats must be mitigated before production deployment. High threats must have a remediation plan within 30 days.
