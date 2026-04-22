@@ -47,7 +47,7 @@ Healthcare is the #1 most targeted sector for cyberattacks because PHI is
 worth 10x more than credit card data on the dark web.
 
 | Tactic | Technique ID | Technique Name | Healthcare Risk |
-|--------|-------------|----------------|----------------|
+|--------|-------------|----------------|-----------------|
 | Initial Access | T1566 | Phishing | Staff tricked into giving credentials |
 | Initial Access | T1190 | Exploit Public-Facing App | SQL injection on patient portal |
 | Initial Access | T1078 | Valid Accounts | Stolen doctor login used to access PHI |
@@ -71,16 +71,26 @@ worth 10x more than credit card data on the dark web.
 | T1 | Record Modification | T1565.001 | Stored Data Manipulation | Impact | 🔴 Critical | File integrity monitoring, DB change alerts | Field-level hashing, RBAC write controls |
 | T2 | Prescription Alteration | T1565.001 | Stored Data Manipulation | Impact | 🔴 Critical | Rx change audit alerts | Digital Rx signatures, immutable Rx log |
 | T3 | Audit Log Tampering | T1070 | Indicator Removal | Defense Evasion | 🟠 High | Log gap detection, SIEM alerting | Write-once audit store, off-system backup |
+| T4 | Claims Manipulation | T1565 | Data Manipulation | Impact | 🟠 High | Payload checksum validation, reconciliation alerts | Payload signing, encrypted DB fields, reconciliation checks |
 | T5 | Vitals Tampering | T1565.002 | Transmitted Data Manipulation | Impact | 🔴 Critical | Threshold anomaly detection | Sensor data signing, redundant monitoring |
 | R1 | Prescription Denial | T1070 | Indicator Removal | Defense Evasion | 🟠 High | Signed approval audit trail | Cryptographically signed Rx approvals |
+| R2 | Access Denial | T1070.001 | Clear Windows Event Logs | Defense Evasion | 🟡 Medium | Immutable log access monitoring | Immutable access logs with user ID, IP, and timestamp |
+| R3 | Permission Change Denial | T1078 | Valid Accounts | Defense Evasion | 🟠 High | Admin action audit alerts, privilege change monitoring | Admin action logging, dual-approval for privilege changes |
+| R4 | Claim Receipt Denial | T1557 | Adversary-in-the-Middle | Credential Access | 🟡 Medium | Delivery acknowledgement monitoring | Signed receipts, message delivery acknowledgements |
 | R5 | Export Audit Gap | T1530 | Data from Cloud Storage | Collection | 🟠 High | Export event monitoring, DLP alerts | Mandatory export logging, DLP controls |
 | I1 | SQL Injection | T1190 | Exploit Public-Facing App | Initial Access | 🔴 Critical | WAF alerts, DB query anomaly detection | Parameterised queries, WAF, input validation |
 | I2 | Excessive Data Return | T1213 | Data from Info Repositories | Collection | 🟠 High | API response size monitoring | Response filtering, API field allowlists |
+| I3 | Verbose Error Messages | T1082 | System Information Discovery | Discovery | 🟡 Medium | Error response content monitoring | Generic error responses in production, detailed logs server-side only |
 | I4 | Unencrypted Transit | T1040 | Network Sniffing | Credential Access | 🔴 Critical | TLS enforcement monitoring | TLS 1.2+ enforced, HSTS headers |
 | I5 | Exposed Backups | T1530 | Data from Cloud Storage | Collection | 🔴 Critical | S3 public access alerts | Encrypted backups, private S3 buckets |
+| I6 | PHI in Logs | T1552 | Unsecured Credentials | Credential Access | 🟠 High | Log content scanning, PII detection alerts | Log scrubbing rules, PII-aware logging libraries |
 | D1 | DDoS Attack | T1498 | Network Denial of Service | Impact | 🟠 High | Traffic volume anomaly detection | WAF, rate limiting, CDN-based mitigation |
+| D2 | Database Exhaustion | T1499 | Endpoint Denial of Service | Impact | 🟠 High | DB connection pool monitoring, slow query alerts | Query timeouts, connection pooling limits, read replicas |
+| D3 | Storage Exhaustion | T1499.001 | OS Exhaustion Flood | Impact | 🟡 Medium | Disk usage monitoring, upload rate alerts | File size limits, upload quotas per user |
 | D4 | Mass Account Lockout | T1110 | Brute Force | Credential Access | 🟡 Medium | Failed login rate alerts | Progressive delays, CAPTCHA, SOC alerting |
+| D5 | Rx Service Overload | T1499 | Endpoint Denial of Service | Impact | 🟠 High | Request queue depth monitoring, error rate alerts | Input validation, request rate limiting, queue depth monitoring |
 | E1 | Patient → Doctor Privilege | T1078 | Valid Accounts | Privilege Escalation | 🔴 Critical | Role anomaly detection, privilege change alerts | Strict RBAC, server-side authorisation on every API |
+| E2 | Doctor → Admin Privilege | T1078.003 | Cloud Accounts | Privilege Escalation | 🔴 Critical | Admin role assignment alerts, MFA bypass detection | Separate admin accounts, MFA for admin actions, least privilege |
 | E3 | SQLi → DBA Access | T1190 | Exploit Public-Facing App | Privilege Escalation | 🔴 Critical | DB privilege escalation alerts | Parameterised queries, DB least privilege |
 | E4 | Container Escape | T1611 | Escape to Host | Privilege Escalation | 🔴 Critical | Runtime anomaly detection (Falco) | Read-only containers, no privileged mode |
 | E5 | IDOR | T1548 | Abuse Elevation Control | Privilege Escalation | 🟠 High | Abnormal record access patterns | Server-side authorisation, never trust client IDs |
@@ -99,11 +109,11 @@ worth 10x more than credit card data on the dark web.
 
 ```mermaid
 flowchart LR
-    A["🎣 T1566.001\nSpearphishing\nInitial Access"] -->|Stolen credentials| B["👤 T1078\nValid Accounts\nPrivilege Escalation"]
-    B -->|Explore system| C["🔍 T1083\nFile Discovery\nDiscovery"]
-    C -->|Locate PHI| D["📂 T1213\nData from Repositories\nCollection"]
-    D -->|Stage data| E["📦 T1005\nLocal Data Staging\nCollection"]
-    E -->|Send to attacker| F["📡 T1567\nExfiltration Over Web\nExfiltration"]
+    A["\ud83c\udfa3 T1566.001\nSpearphishing\nInitial Access"] -->|Stolen credentials| B["\ud83d\udc64 T1078\nValid Accounts\nPrivilege Escalation"]
+    B -->|Explore system| C["\ud83d\udd0d T1083\nFile Discovery\nDiscovery"]
+    C -->|Locate PHI| D["\ud83d\udcc2 T1213\nData from Repositories\nCollection"]
+    D -->|Stage data| E["\ud83d\udce6 T1005\nLocal Data Staging\nCollection"]
+    E -->|Send to attacker| F["\ud83d\udce1 T1567\nExfiltration Over Web\nExfiltration"]
 ```
 
 **What stops this chain at Solaris:**
@@ -120,10 +130,10 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    A["🔑 T1078\nValid Accounts\nInitial Access"] -->|Access records| B["✏️ T1565.001\nRecord Tampering\nImpact"]
-    B -->|Cover tracks| C["🧹 T1070\nIndicator Removal\nDefense Evasion"]
-    C -->|Bulk export| D["☁️ T1530\nCloud Storage Access\nCollection"]
-    D -->|External transfer| E["📤 T1048\nAlt Protocol Exfil\nExfiltration"]
+    A["\ud83d\udd11 T1078\nValid Accounts\nInitial Access"] -->|Access records| B["\u270f\ufe0f T1565.001\nRecord Tampering\nImpact"]
+    B -->|Cover tracks| C["\ud83e\uddf9 T1070\nIndicator Removal\nDefense Evasion"]
+    C -->|Bulk export| D["\u2601\ufe0f T1530\nCloud Storage Access\nCollection"]
+    D -->|External transfer| E["\ud83d� T1048\nAlt Protocol Exfil\nExfiltration"]
 ```
 
 **What stops this chain at Solaris:**
@@ -139,10 +149,10 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    A["📧 T1566\nPhishing Email\nInitial Access"] -->|Execute payload| B["💻 T1059\nCommand Execution\nExecution"]
-    B -->|Create backdoor| C["👥 T1136\nCreate Account\nPersistence"]
-    C -->|Move across systems| D["↔️ T1021\nLateral Movement\nLateral Movement"]
-    D -->|Encrypt all data| E["🔒 T1486\nData Encrypted for Impact\nImpact"]
+    A["\ud83d\udce7 T1566\nPhishing Email\nInitial Access"] -->|Execute payload| B["\ud83d\udcbb T1059\nCommand Execution\nExecution"]
+    B -->|Create backdoor| C["\ud83d\udc65 T1136\nCreate Account\nPersistence"]
+    C -->|Move across systems| D["\u2194\ufe0f T1021\nLateral Movement\nLateral Movement"]
+    D -->|Encrypt all data| E["\ud83d\udd12 T1486\nData Encrypted for Impact\nImpact"]
 ```
 
 **What stops this chain at Solaris:**
@@ -158,10 +168,10 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    A["💉 T1190\nExploit Public App\nInitial Access"] -->|Extract patient data| B["🗄️ T1213\nData from Repositories\nCollection"]
-    B -->|Escalate to DBA| C["⬆️ T1078\nValid Accounts\nPrivilege Escalation"]
-    C -->|Modify records| D["✏️ T1565.001\nStored Data Manipulation\nImpact"]
-    D -->|Delete audit trail| E["🧹 T1070\nIndicator Removal\nDefense Evasion"]
+    A["\ud83d\udc89 T1190\nExploit Public App\nInitial Access"] -->|Extract patient data| B["\ud83d\uddc4\ufe0f T1213\nData from Repositories\nCollection"]
+    B -->|Escalate to DBA| C["\u2b06\ufe0f T1078\nValid Accounts\nPrivilege Escalation"]
+    C -->|Modify records| D["\u270f\ufe0f T1565.001\nStored Data Manipulation\nImpact"]
+    D -->|Delete audit trail| E["\ud83e\uddf9 T1070\nIndicator Removal\nDefense Evasion"]
 ```
 
 **What stops this chain at Solaris:**
@@ -177,10 +187,10 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    A["🔗 T1195\nSupply Chain Compromise\nInitial Access"] -->|Inject fake results| B["📋 T1565.002\nTransmitted Data Manipulation\nImpact"]
-    B -->|Appear legitimate| C["👤 T1078\nValid Accounts\nDefense Evasion"]
-    C -->|Doctor acts on bad data| D["⚠️ T1565.001\nStored Data Manipulation\nImpact"]
-    D -->|Patient harmed| E["🏥 Clinical Impact\nPatient Safety Risk"]
+    A["\ud83d\udd17 T1195\nSupply Chain Compromise\nInitial Access"] -->|Inject fake results| B["\ud83d\udccb T1565.002\nTransmitted Data Manipulation\nImpact"]
+    B -->|Appear legitimate| C["\ud83d\udc64 T1078\nValid Accounts\nDefense Evasion"]
+    C -->|Doctor acts on bad data| D["\u26a0\ufe0f T1565.001\nStored Data Manipulation\nImpact"]
+    D -->|Patient harmed| E["\ud83c\udfe5 Clinical Impact\nPatient Safety Risk"]
 ```
 
 **What stops this chain at Solaris:**
@@ -241,13 +251,13 @@ flowchart LR
 | Initial Access | S1, S5, I1 | ✅ Covered |
 | Execution | Chain 3 | ✅ Covered |
 | Persistence | S2, R1 | ✅ Covered |
-| Privilege Escalation | E1, E3, E4, E5 | ✅ Covered |
-| Defense Evasion | T3, R1 | ✅ Covered |
-| Credential Access | S3, S4, I4, D4 | ✅ Covered |
-| Discovery | Chain 1 | ✅ Covered |
+| Privilege Escalation | E1, E2, E3, E4, E5 | ✅ Covered |
+| Defense Evasion | T3, R1, R2, R3 | ✅ Covered |
+| Credential Access | S3, S4, I4, I6, D4, R4 | ✅ Covered |
+| Discovery | I3, Chain 1 | ✅ Covered |
 | Collection | R5, I2, I5 | ✅ Covered |
 | Exfiltration | Chains 1 + 2 | ✅ Covered |
-| Impact | T1, T2, T5, D1 | ✅ Covered |
+| Impact | T1, T2, T4, T5, D1, D2, D3, D5 | ✅ Covered |
 | Lateral Movement | Not yet mapped | ⚠️ Gap |
 | Command & Control | Not yet mapped | ⚠️ Gap |
 
