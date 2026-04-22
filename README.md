@@ -23,6 +23,7 @@ Healthcare platform threat model using STRIDE, MITRE ATT&CK, Cyber Kill Chain, a
 - [Threat Coverage](#threat-coverage)
 - [Key Findings](#key-findings)
 - [Attack Simulation](#attack-simulation)
+- [ATT&CK Navigator Layer](#attck-navigator-layer)
 - [Skills Demonstrated](#skills-demonstrated)
 - [Repository Structure](#repository-structure)
 - [License](#license)
@@ -188,18 +189,57 @@ Full simulation with detection point analysis is in [`reports/threat-model-repor
 
 ---
 
+## ATT&CK Navigator Layer
+
+**File:** [`reports/solaris-layer.json`](reports/solaris-layer.json)
+
+`solaris-layer.json` is a **MITRE ATT&CK Navigator layer file** — a machine-readable JSON export that visualises exactly which ATT&CK tactics and techniques are relevant to this threat model, colour-coded by severity.
+
+### What it contains
+
+Every MITRE ATT&CK technique mapped in this threat model is encoded in the layer file with:
+- **Technique ID and name** (e.g. T1190 — Exploit Public-Facing Application)
+- **Colour score** — techniques are heat-mapped by DREAD risk score (red = critical, amber = high, yellow = medium)
+- **Comment** — the specific Solaris threat each technique maps to (e.g. "SQL injection on patient records API — DREAD 9.4")
+- **Tactic context** — each technique is pinned to its correct ATT&CK tactic column
+
+### How to import it into ATT&CK Navigator
+
+ATT&CK Navigator is a free, browser-based tool maintained by MITRE. No account or installation required.
+
+1. Open [https://mitre-attack.github.io/attack-navigator/](https://mitre-attack.github.io/attack-navigator/) in your browser
+2. Click **"Open Existing Layer"**
+3. Select **"Upload from local"**
+4. Choose `reports/solaris-layer.json` from this repository
+5. The matrix will load showing all 21 mapped techniques highlighted across 10 ATT&CK tactics
+
+### What you will see
+
+Once loaded, the Navigator matrix shows:
+
+| Colour | Meaning |
+|--------|---------|
+| 🔴 Red | Critical severity (DREAD ≥ 9.0) — SQL Injection, Exposed Backup |
+| 🟠 Orange | High severity (DREAD 8.0–8.9) — Credential Stuffing, Phishing, Insider Abuse |
+| 🟡 Yellow | Medium severity (DREAD 6.0–7.9) — DoS, Repudiation threats |
+| ⬜ Grey | Tactics present in ATT&CK but not applicable to this architecture |
+
+The two unhighlighted tactic columns — **Lateral Movement** and **Command & Control** — represent the acknowledged coverage gaps documented in [`reports/analyses/mitre-mapping.md`](reports/analyses/mitre-mapping.md), and will be addressed in the next iteration of this threat model.
+
+---
+
 ## Skills Demonstrated
 
 ### Security Engineering
 - **Threat Modelling (STRIDE):** Systematic identification and categorisation of 25 threats across all six STRIDE categories applied to a realistic cloud architecture
 - **Risk Scoring (DREAD):** Quantitative risk scoring enabling priority-ordered remediation — the highest-scoring threat (SQLi, 9.4) was identified as a pre-launch blocker
 - **Attack Tree Analysis:** Multi-path attacker goal decomposition with AND/OR node logic used to identify the lowest-effort attack path (credential stuffing, zero skill required)
-- **MITRE ATT&CK Mapping:** Every threat mapped to specific ATT&CK techniques, enabling detection rule development and red team scenario planning
+- **MITRE ATT&CK Mapping:** Every threat mapped to specific ATT&CK techniques, with a Navigator layer file for visual tactic coverage review
 
 ### DevSecOps & Secure Architecture
 - **Security-by-design:** Controls recommended at the architecture stage, not as afterthoughts — demonstrating shift-left security thinking
 - **NIST CSF Control Mapping:** All 25 threats mapped to NIST CSF functions (Identify, Protect, Detect, Respond, Recover) with implementation status tracked
-- **Compliance Awareness:** NHS DSPT mandatory standards and UK GDPR Article 32 obligations applied throughout — breach notification timelines, data minimisation, and access control requirements all reflected in control recommendations
+- **Compliance Awareness:** NHS DSPT mandatory standards, UK GDPR Article 32, and ICO 72-hour breach notification obligations (Article 33) applied throughout
 - **Immutable Infrastructure Security:** AWS-specific recommendations including S3 Object Lock, CloudTrail log integrity, and VPC flow log analysis
 
 ### Documentation & Communication
@@ -224,7 +264,7 @@ complete-threat-model-for-healthcare-application/
 │
 └── reports/
     ├── threat-model-report.md                   # Full consolidated threat model report
-    ├── solaris-layer.json                        # Structured threat data (machine-readable)
+    ├── solaris-layer.json                        # ATT&CK Navigator layer — import at mitre-attack.github.io/attack-navigator
     └── analyses/
         ├── stride-threats.md                    # STRIDE threat catalogue (25 threats)
         ├── mitre-mapping.md                     # MITRE ATT&CK technique mapping
