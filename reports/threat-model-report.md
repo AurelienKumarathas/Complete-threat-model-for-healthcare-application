@@ -4,7 +4,7 @@
 | Field | Detail |
 |-------|--------|
 | **Version** | 1.0 |
-| **Date** | March 2026 |
+| **Date** | April 2026 |
 | **Classification** | Confidential |
 | **Review Cycle** | Quarterly, or upon significant system change |
 
@@ -504,27 +504,27 @@ gantt
     title Security Remediation Roadmap — Solaris Care Connect 360
     dateFormat  YYYY-MM-DD
     section Pre-Launch
-    Block S3 public access         :crit, 2026-03-09, 1d
-    DB least privilege             :crit, 2026-03-09, 1d
-    Suppress SQL errors            :crit, 2026-03-09, 1d
-    Enforce HTTPS internal         :crit, 2026-03-09, 3d
-    HSTS headers                   :crit, 2026-03-10, 1d
-    MFA all users                  :crit, 2026-03-09, 7d
-    WAF deployment                 :crit, 2026-03-09, 7d
+    Block S3 public access         :crit, 2026-04-22, 1d
+    DB least privilege             :crit, 2026-04-22, 1d
+    Suppress SQL errors            :crit, 2026-04-22, 1d
+    Enforce HTTPS internal         :crit, 2026-04-22, 3d
+    HSTS headers                   :crit, 2026-04-23, 1d
+    MFA all users                  :crit, 2026-04-22, 7d
+    WAF deployment                 :crit, 2026-04-22, 7d
     section 30-Day
-    Database Activity Monitoring   :2026-03-16, 14d
-    Phishing training programme    :2026-03-16, 21d
-    HaveIBeenPwned integration     :2026-03-16, 7d
-    S3 versioning + object lock    :2026-03-16, 3d
-    Backup restore test            :2026-03-23, 5d
-    Falco runtime security         :2026-03-23, 10d
-    Clinician account workflow     :2026-03-23, 7d
+    Database Activity Monitoring   :2026-04-29, 14d
+    Phishing training programme    :2026-04-29, 21d
+    HaveIBeenPwned integration     :2026-04-29, 7d
+    S3 versioning + object lock    :2026-04-29, 3d
+    Backup restore test            :2026-05-06, 5d
+    Falco runtime security         :2026-05-06, 10d
+    Clinician account workflow     :2026-05-06, 7d
     section 90-Day
-    Field-level hashing            :2026-04-06, 21d
-    API field allowlists           :2026-04-06, 14d
-    SIEM detection rules           :2026-04-06, 30d
-    UBA deployment                 :2026-04-20, 14d
-    Incident Response Plan         :2026-04-20, 14d
+    Field-level hashing            :2026-05-22, 21d
+    API field allowlists           :2026-05-22, 14d
+    SIEM detection rules           :2026-05-22, 30d
+    UBA deployment                 :2026-06-05, 14d
+    Incident Response Plan         :2026-06-05, 14d
 ```
 
 ---
@@ -563,4 +563,4 @@ This section maps key recommendations to the regulatory controls they satisfy.
 
 *This threat model should be reviewed quarterly or upon any significant
 change to system architecture, data flows, or the external threat landscape.
-The next scheduled review is June 2026.*
+The next scheduled review is July 2026.*
