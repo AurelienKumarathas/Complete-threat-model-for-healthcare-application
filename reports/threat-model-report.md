@@ -3,7 +3,7 @@
 
 | Field | Detail |
 |-------|--------|
-| **Version** | 1.0 |
+| **Version** | 1.1 |
 | **Date** | April 2026 |
 | **Classification** | Confidential |
 | **Review Cycle** | Quarterly, or upon significant system change |
@@ -125,15 +125,22 @@ each serving a distinct purpose:
 
 ### 1.3 Regulatory Context
 
-Solaris Care Connect 360 operates under the following regulatory frameworks,
-each of which mandates elements of this threat model:
+Solaris Care Connect 360 is a UK-based platform and its **primary regulatory
+obligations are UK GDPR and the NHS Data Security and Protection Toolkit
+(DSPT)**. UK GDPR is the post-Brexit domestic implementation of the EU GDPR,
+enforced by the Information Commissioner's Office (ICO) — not the EU's
+supervisory authorities. HIPAA is included in this analysis because the
+platform's architecture and data handling practices may in future serve US
+patients or US-based partner organisations; however, it is not the primary
+compliance driver for the current UK deployment.
 
-| Regulation | Requirement | Relevance |
-|------------|------------|-----------|
-| **HIPAA** (US) | Risk analysis of all PHI systems | Mandates this threat model |
-| **GDPR** (UK/EU) | Data protection by design | Governs patient PII handling |
-| **NHS DSPT** | Data Security and Protection Toolkit | Required for NHS integration |
-| **ISO 27001** | Information Security Management | Risk register requirement |
+| Regulation | Jurisdiction | Enforcer | Primary Obligation | Relevance to This System |
+|------------|-------------|----------|-------------------|--------------------------|
+| **UK GDPR** | United Kingdom | ICO | Data protection by design; 72-hour breach notification | **Primary** — governs all UK patient PII/PHI |
+| **NHS DSPT** | England (NHS) | NHS England | Annual data security self-assessment | **Primary** — required for NHS integration |
+| **ISO 27001** | International | Certification body | Information Security Management System | **Primary** — risk register and control framework |
+| **HIPAA** | United States | HHS / OCR | Risk analysis of all PHI systems | **Secondary** — applies if US patients are served |
+| **EU GDPR** | European Union | Lead SA (varies) | Data protection by design | **Not currently applicable** — UK operates under UK GDPR post-Brexit |
 
 ---
 
@@ -430,7 +437,7 @@ Current implementation status across all mapped controls:
 
 The Detect, Respond, and Recover functions are critically under-implemented.
 A system that prevents attacks but cannot detect or recover from them
-does not meet HIPAA security requirements.
+does not meet UK GDPR or NHS DSPT security requirements.
 
 ### 5.2 Critical Control Gaps
 
@@ -447,7 +454,7 @@ does not meet HIPAA security requirements.
 | GAP-9 | I4 | HSTS headers configured | Low |
 | GAP-10 | I5 | S3 backup bucket public access blocked | Low |
 
-**Full gap register (18 gaps) available in:** [`reports/analyses/security-control-mapping.md`](../reports/analyses/security-control-mapping.md)
+**Full gap register (18 gaps) available in:** [`reports/analyses/security-control-mapping.md`](analyses/security-control-mapping.md)
 
 ---
 
@@ -533,16 +540,100 @@ gantt
 
 This section maps key recommendations to the regulatory controls they satisfy.
 
-| Recommendation | HIPAA | GDPR | NIST CSF | ISO 27001 |
-|----------------|:-----:|:----:|:--------:|:---------:|
-| MFA for all users | §164.312(d) | Art. 32 | PR.AC-7 | A.9.4.2 |
-| PHI encryption at rest | §164.312(a)(2)(iv) | Art. 32 | PR.DS-1 | A.10.1.1 |
-| PHI encryption in transit | §164.312(e)(2)(ii) | Art. 32 | PR.DS-2 | A.10.1.1 |
-| Audit logging | §164.312(b) | Art. 30 | DE.CM-3 | A.12.4.1 |
-| Access control (RBAC) | §164.312(a)(1) | Art. 25 | PR.AC-4 | A.9.1.2 |
-| Risk assessment (this document) | §164.308(a)(1) | Art. 35 | ID.RA-1 | A.12.6.1 |
-| Backup and recovery | §164.308(a)(7) | Art. 32 | RC.RP-1 | A.12.3.1 |
-| Incident response plan | §164.308(a)(6) | Art. 33 | RS.RP-1 | A.16.1.1 |
+| Recommendation | UK GDPR | HIPAA | NIST CSF | ISO 27001 |
+|----------------|:-------:|:-----:|:--------:|:---------:|
+| MFA for all users | Art. 32 | §164.312(d) | PR.AC-7 | A.9.4.2 |
+| PHI encryption at rest | Art. 32 | §164.312(a)(2)(iv) | PR.DS-1 | A.10.1.1 |
+| PHI encryption in transit | Art. 32 | §164.312(e)(2)(ii) | PR.DS-2 | A.10.1.1 |
+| Audit logging | Art. 30 | §164.312(b) | DE.CM-3 | A.12.4.1 |
+| Access control (RBAC) | Art. 25 | §164.312(a)(1) | PR.AC-4 | A.9.1.2 |
+| Risk assessment (this document) | Art. 35 (DPIA) | §164.308(a)(1) | ID.RA-1 | A.12.6.1 |
+| Backup and recovery | Art. 32(1)(c) | §164.308(a)(7) | RC.RP-1 | A.12.3.1 |
+| Incident response plan | Art. 33 | §164.308(a)(6) | RS.RP-1 | A.16.1.1 |
+| **ICO breach notification** | **Art. 33 — 72 hrs** | — | RS.CO-2 | A.16.1.3 |
+
+### 7.1 UK GDPR Breach Notification Obligations (ICO — Article 33)
+
+Under **UK GDPR Article 33**, Solaris Care Connect 360 is legally required
+to notify the Information Commissioner's Office (ICO) of any personal data
+breach within **72 hours** of becoming aware of it — if the breach is likely
+to result in a risk to the rights and freedoms of individuals. Given that
+this system processes special category health data (the highest protection
+tier under UK GDPR), **virtually every security breach in this threat
+register would trigger mandatory ICO notification.**
+
+#### What Triggers Notification?
+
+A breach must be reported to the ICO if it is likely to result in risk to
+individuals. For a healthcare platform handling special category data, the
+ICO considers the following to *always* constitute high risk:
+
+- Unauthorised access to or exfiltration of patient health records
+- Loss of availability of systems holding patient data (e.g. ransomware)
+- Exposure of patient data to an unintended recipient
+- Destruction or corruption of patient records without backup recovery
+
+#### The 72-Hour Clock
+
+| Stage | Requirement | Detail |
+|-------|-------------|--------|
+| **Hour 0** | Breach detected | Clock starts from when *any* staff member becomes aware |
+| **Hour 0–72** | Notify ICO | Report via ICO online portal even if investigation is incomplete |
+| **Hour 0–72** | Internal escalation | DPO (or equivalent) must be notified immediately |
+| **Without undue delay** | Notify affected individuals | Required if breach is *high risk* to those individuals |
+| **Ongoing** | Document everything | All breaches must be recorded internally, even if not reported |
+
+> **Key point:** The 72-hour deadline is not 72 hours from *confirming* the
+> breach — it is 72 hours from *becoming aware* that a breach may have
+> occurred. Investigations do not pause the clock. Partial notifications
+> are accepted; the ICO can be updated as more information becomes available.
+
+#### What Must Be Included in the ICO Notification?
+
+Per UK GDPR Article 33(3), the notification must contain:
+
+1. The **nature** of the breach (categories and approximate number of individuals and records affected)
+2. The **name and contact details** of the Data Protection Officer (DPO)
+3. The **likely consequences** of the breach
+4. The **measures taken or proposed** to address the breach and mitigate its effects
+
+#### Threat-to-Notification Mapping
+
+The following threats in this register would trigger mandatory ICO notification
+if successfully exploited:
+
+| Threat ID | Threat | Notification Trigger | Notification Urgency |
+|-----------|--------|---------------------|---------------------|
+| I1 | SQL Injection — PHI Breach | Mass patient record exfiltration | 🔴 Immediate — entire DB at risk |
+| I5 | Exposed Backup Files | Public exposure of full patient DB backup | 🔴 Immediate — 100,000 patients |
+| S1 | Credential Theft via Phishing | Clinician account compromise → PHI access | 🟠 Within 24 hrs of confirmation |
+| S3 | Credential Stuffing | Patient account takeover → PHI access | 🟠 Within 24 hrs of confirmation |
+| T1 | Patient Record Modification | Integrity breach of health records | 🟠 Within 24 hrs of confirmation |
+| T5 | Ransomware via Phishing | Availability loss + potential exfiltration | 🔴 Immediate — dual notification likely |
+| E2 | Insider Bulk Export | Deliberate exfiltration by authorised user | 🟠 Within 24 hrs of confirmation |
+| I3 | Third-Party Data Leak | PHI shared with unauthorised external party | 🟠 Within 24 hrs of confirmation |
+
+#### Operational Readiness Gap
+
+**This system currently has no documented Incident Response Plan (IRP).**
+Without an IRP, the organisation cannot reliably meet the 72-hour
+notification deadline. Recommendation 23 (Develop and test Incident
+Response Plan) in Section 6.3 directly addresses this gap and should
+be treated as a compliance obligation, not merely a best practice.
+
+The IRP must include, at minimum:
+- A named DPO or privacy lead with ICO notification authority
+- A breach assessment checklist (does this trigger Art. 33 notification?)
+- An ICO notification template pre-populated with system details
+- An internal escalation path from detection → DPO → ICO within 4 hours
+
+#### Penalty for Non-Compliance
+
+Failure to notify the ICO within 72 hours, without demonstrable justification,
+can result in fines of up to **£17.5 million or 4% of global annual turnover**
+(whichever is higher) under UK GDPR. For a healthcare platform, reputational
+damage and regulatory investigation are likely to accompany any financial
+penalty.
 
 ---
 
