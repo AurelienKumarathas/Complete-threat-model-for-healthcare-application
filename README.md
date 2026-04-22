@@ -1,5 +1,5 @@
 # Complete-threat-model-for-healthcare-application
-Healthcare platform threat model using STRIDE, MITRE ATT&amp;CK, Cyber Kill Chain, attack trees, DREAD risk scoring, and NIST CSF control mapping. 25 threats identified across 6 categories.
+Healthcare platform threat model using STRIDE, MITRE ATT&CK, Cyber Kill Chain, attack trees, DREAD risk scoring, and NIST CSF control mapping. 25 threats identified across 6 categories.
 
 # Complete Threat Model
 
@@ -184,7 +184,7 @@ Day 30 → Discovery: Breach found during audit (21-day gap)
 
 **With all recommended controls:** Attack chain broken at Day 5 (email sandbox detonates PDF macro before delivery).
 
-Full simulation with detection point analysis is in [`reports/attack-simulation.md`](reports/attack-simulation.md).
+Full simulation with detection point analysis is in [`reports/threat-model-report.md`](reports/threat-model-report.md).
 
 ---
 
@@ -212,26 +212,25 @@ Full simulation with detection point analysis is in [`reports/attack-simulation.
 ## Repository Structure
 
 ```
-Complete-threat-model-for-healthcare-application/
+complete-threat-model-for-healthcare-application/
 │
-├── README.md                          # Project overview and documentation
+├── README.md                                    # Project overview and documentation
 │
 ├── diagrams/
-│   ├── architecture.md                # System architecture and trust boundaries
-│   ├── attack-trees.md                # Attack trees for all attacker goals
-│   ├── dfd-level0.md                  # Level 0 Data Flow Diagram (context)
-│   └── dfd-level1.md                  # Level 1 Data Flow Diagram (detail)
+│   ├── architecture.md                          # System architecture and trust boundaries
+│   ├── attack-trees.md                          # Attack trees for all attacker goals
+│   ├── dfd-level0.md                            # Level 0 Data Flow Diagram (context)
+│   └── dfd-level1.md                            # Level 1 Data Flow Diagram (detail)
 │
-├── reports/
-│   ├── solaris-layer.json             # Structured threat data (machine-readable)
-│   └── threat-model-report.md         # Full consolidated threat model report
-│
-└── templates/
-    ├── kill-chain-analysis.md         # Cyber Kill Chain per attack scenario
-    ├── mitre-mapping.md               # MITRE ATT&CK technique mapping
-    ├── risk-register.md               # DREAD-scored risk register (25 threats)
-    ├── security-control-mapping.md    # NIST CSF control mapping and gap analysis
-    └── stride-threats.md              # STRIDE threat catalogue
+└── reports/
+    ├── threat-model-report.md                   # Full consolidated threat model report
+    ├── solaris-layer.json                        # Structured threat data (machine-readable)
+    └── analyses/
+        ├── stride-threats.md                    # STRIDE threat catalogue (25 threats)
+        ├── mitre-mapping.md                     # MITRE ATT&CK technique mapping
+        ├── kill-chain-analysis.md               # Cyber Kill Chain per attack scenario
+        ├── risk-register.md                     # DREAD-scored risk register
+        └── security-control-mapping.md          # NIST CSF control mapping and gap analysis
 ```
 
 ---
