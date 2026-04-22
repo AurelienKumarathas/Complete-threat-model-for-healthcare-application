@@ -24,6 +24,7 @@ Healthcare platform threat model using STRIDE, MITRE ATT&CK, Cyber Kill Chain, a
 - [Key Findings](#key-findings)
 - [Attack Simulation](#attack-simulation)
 - [ATT&CK Navigator Layer](#attck-navigator-layer)
+- [What I Would Do Next](#what-i-would-do-next)
 - [Skills Demonstrated](#skills-demonstrated)
 - [Repository Structure](#repository-structure)
 - [License](#license)
@@ -225,6 +226,31 @@ Once loaded, the Navigator matrix shows:
 | ⬜ Grey | Tactics present in ATT&CK but not applicable to this architecture |
 
 The two unhighlighted tactic columns — **Lateral Movement** and **Command & Control** — represent the acknowledged coverage gaps documented in [`reports/analyses/mitre-mapping.md`](reports/analyses/mitre-mapping.md), and will be addressed in the next iteration of this threat model.
+
+---
+
+## What I Would Do Next
+
+This section documents how this threat model would be extended in a real engagement — covering validation, automation, and coverage gaps.
+
+### If this were a real product
+
+- **Live penetration test** — scope the API Gateway and auth endpoints for a black-box test to validate whether the SQLi and IDOR findings are truly exploitable, not just theoretically present. Theoretical identification and confirmed exploitation are two different risk levels.
+- **Purple team exercise** — run the Day 5 phishing scenario with a red team and measure whether the email sandbox control actually breaks the kill chain as modelled. Controls that look good on paper frequently fail under realistic conditions.
+- **Threat model refresh cadence** — schedule a mandatory re-review at every major architecture change: new third-party integration, new data classification, new AWS service. Threat models go stale faster than code.
+
+### If this were integrated into a CI/CD pipeline
+
+- **[Semgrep](https://semgrep.dev/)** — static analysis rules to catch SQL injection patterns and hardcoded credentials at PR merge, before code reaches staging. Custom rules can be written to flag the exact IDOR pattern identified in this model.
+- **[Checkov](https://www.checkov.io/)** — infrastructure-as-code scanning to flag S3 buckets missing Object Lock, overly permissive security groups, and unencrypted RDS instances automatically on every Terraform plan.
+- **[OWASP Dependency-Check](https://owasp.org/www-project-dependency-check/)** — automated CVE scanning of Node.js dependencies on every build, ensuring newly disclosed vulnerabilities in third-party packages are caught before deployment.
+
+### Coverage gaps I would close
+
+- **Map Lateral Movement (T1021 — Remote Services)** — currently the largest gap in the ATT&CK layer; critical for modelling how an attacker moves from a compromised ECS container to the RDS database layer
+- **Map Command & Control (T1071 — Application Layer Protocol)** — models how an attacker maintains persistence and exfiltrates data over HTTPS without triggering standard network alerts
+- **Formalise the NHS login (OAuth) integration as a separate threat surface** — the current model treats it as a single trust boundary crossing; a full OAuth threat model would apply STRIDE across all four OAuth grant flows
+- **Add a UBA detection rule set** — translate the insider threat scenario into concrete Splunk/Elastic detection queries (bulk export >500 records, off-hours access, geolocation anomalies) so the model produces actionable detection engineering output
 
 ---
 
