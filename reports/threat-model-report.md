@@ -42,6 +42,15 @@ by DREAD scoring for the five highest-priority threats.
 > universal MFA enforcement, and an unaudited S3 backup bucket that may
 > be publicly accessible.
 
+> **Note on pre-launch blocker count:** Two threats are scored Critical
+> (risk score ≥16/25) by the Likelihood × Impact methodology. The eight
+> pre-launch blockers include these two Critical threats **plus** six
+> High-severity threats (score 10–15) where remediation effort is low
+> (≤1 week) and the consequence of deferral — PHI exposure or undetectable
+> breach — is operationally unacceptable before go-live. Resolving
+> high-impact, low-effort gaps pre-launch is standard risk management
+> practice regardless of raw score.
+
 ### Top 3 Findings
 
 **Finding 1 — SQL Injection (I1) — Risk Score: 20/25**
@@ -76,8 +85,8 @@ database in a single downloadable file.
 
 ### Estimated Remediation Timeline
 
-- **Pre-launch (this sprint):** 8 critical gaps resolved
-- **30 days post-launch:** 10 high-priority gaps resolved
+- **Pre-launch (this sprint):** 8 pre-launch blockers resolved (2 Critical + 6 High with low remediation effort)
+- **30 days post-launch:** Remaining 5 High-priority gaps resolved
 - **90 days post-launch:** All remaining medium gaps resolved
 - **Total estimated effort:** 10 weeks, 2 engineers
 
@@ -375,19 +384,21 @@ does not meet HIPAA security requirements.
 
 ### 6.1 Pre-Launch — Must Fix Before Go-Live
 
-These represent unacceptable risk for a system handling live patient PHI.
-No patient data should enter the system until all eight are resolved.
+These eight actions must be completed before the platform accepts live patient
+PHI. They comprise the 2 Critical-scored threats plus 6 High-scored threats
+where remediation effort is low (≤1 week) and deferral risk is operationally
+unacceptable — consistent with standard risk-based pre-launch decision-making.
 
-| # | Action | Gap | Owner | Estimated Effort |
-|---|--------|-----|-------|-----------------|
-| 1 | Block S3 public access on backup bucket | GAP-10 | DevOps | 1 hour |
-| 2 | Set DB app user to SELECT privilege only | GAP-4 | DevOps | 2 hours |
-| 3 | Suppress SQL error messages in production | GAP-2 | Backend | 2 hours |
-| 4 | Enforce HTTPS on all internal services | GAP-8 | DevOps | 1 day |
-| 5 | Configure HSTS headers | GAP-9 | Backend | 2 hours |
-| 6 | Verify S3 backup encryption (AES-256) | GAP-10 | DevOps | 2 hours |
-| 7 | Enforce MFA for all user account types | GAP-5 | Backend | 1 week |
-| 8 | Deploy WAF with SQL injection ruleset | GAP-1 | DevOps | 1 week |
+| # | Action | Gap | Severity | Owner | Estimated Effort |
+|---|--------|-----|----------|-------|-----------------|
+| 1 | Block S3 public access on backup bucket | GAP-10 | 🟠 High | DevOps | 1 hour |
+| 2 | Set DB app user to SELECT privilege only | GAP-4 | 🟠 High | DevOps | 2 hours |
+| 3 | Suppress SQL error messages in production | GAP-2 | 🟠 High | Backend | 2 hours |
+| 4 | Enforce HTTPS on all internal services | GAP-8 | 🟠 High | DevOps | 1 day |
+| 5 | Configure HSTS headers | GAP-9 | 🟠 High | Backend | 2 hours |
+| 6 | Verify S3 backup encryption (AES-256) | GAP-10 | 🟠 High | DevOps | 2 hours |
+| 7 | Enforce MFA for all user account types | GAP-5 | 🔴 Critical | Backend | 1 week |
+| 8 | Deploy WAF with SQL injection ruleset | GAP-1 | 🔴 Critical | DevOps | 1 week |
 
 ### 6.2 Short-Term — Within 30 Days
 
