@@ -1,5 +1,5 @@
 # Complete-threat-model-for-healthcare-application
-Healthcare platform threat model using STRIDE, MITRE ATT&CK, Cyber Kill Chain, attack trees, DREAD risk scoring, and NIST CSF control mapping. 25 threats identified across 6 categories.
+Healthcare platform threat model using STRIDE, MITRE ATT&CK, Cyber Kill Chain, attack trees, DREAD risk scoring, and NIST CSF control mapping. 31 threats identified across 6 categories.
 
 # Complete Threat Model
 
@@ -10,7 +10,7 @@ Healthcare platform threat model using STRIDE, MITRE ATT&CK, Cyber Kill Chain, a
 ![NHS DSPT](https://img.shields.io/badge/Compliance-NHS%20DSPT-0072CE?style=for-the-badge)
 
 
-> A **production-grade threat model** for a cloud-native healthcare application — identifying 25 threats across 6 categories, mapped to MITRE ATT&CK, scored with DREAD, and paired with a prioritised remediation roadmap. Built to demonstrate real-world security engineering applied to systems handling patient PHI under NHS DSPT and UK GDPR obligations.
+> A **production-grade threat model** for a cloud-native healthcare application — identifying 31 threats across 6 categories, mapped to MITRE ATT&CK, scored with DREAD, and paired with a prioritised remediation roadmap. Built to demonstrate real-world security engineering applied to systems handling patient PHI under NHS DSPT and UK GDPR obligations.
 
 ---
 
@@ -126,23 +126,23 @@ flowchart TD
 
 ## Threat Coverage
 
-**25 threats identified** across 6 STRIDE categories:
+**31 threats identified** across 6 STRIDE categories:
 
 | STRIDE Category | Threats Found | Highest DREAD Score | Status |
 |----------------|:-------------:|:-------------------:|--------|
-| **S** — Spoofing | 4 | 8.2 | 🟡 Partial controls |
+| **S** — Spoofing | 5 | 8.4 | 🟡 Partial controls |
 | **T** — Tampering | 5 | 9.1 | 🔴 Gap identified |
-| **R** — Repudiation | 3 | 7.4 | 🟡 Partial controls |
-| **I** — Information Disclosure | 6 | 9.4 | 🔴 Critical gap |
-| **D** — Denial of Service | 4 | 7.8 | 🟢 Controls in place |
-| **E** — Elevation of Privilege | 3 | 8.6 | 🔴 Gap identified |
+| **R** — Repudiation | 5 | 7.4 | 🟡 Partial controls |
+| **I** — Information Disclosure | 6 | 9.8 | 🔴 Critical gap |
+| **D** — Denial of Service | 5 | 7.8 | 🟢 Controls in place |
+| **E** — Elevation of Privilege | 5 | 8.6 | 🔴 Gap identified |
 
 ### Top 5 Critical Threats
 
 | # | Threat | DREAD Score | MITRE Technique | Control Gap |
 |---|--------|:-----------:|----------------|-------------|
-| 1 | SQL Injection on patient records API | **9.4** | T1190 | No WAF deployed |
-| 2 | PHI exfiltration via broken access control | **9.1** | T1530 | IDOR not fully remediated |
+| 1 | SQL Injection on patient records API | **9.8** | T1190 | No WAF deployed |
+| 2 | PHI exfiltration via broken access control | **9.4** | T1530 | IDOR not fully remediated |
 | 3 | Credential stuffing on patient portal | **8.8** | T1110.004 | MFA not enforced for patients |
 | 4 | Insider privilege abuse — bulk export | **8.6** | T1078 | No User Behaviour Analytics |
 | 5 | Ransomware via phishing → lateral movement | **8.4** | T1486 | Backups not immutable |
@@ -201,7 +201,7 @@ Full simulation with detection point analysis is in [`reports/threat-model-repor
 Every MITRE ATT&CK technique mapped in this threat model is encoded in the layer file with:
 - **Technique ID and name** (e.g. T1190 — Exploit Public-Facing Application)
 - **Colour score** — techniques are heat-mapped by DREAD risk score (red = critical, amber = high, yellow = medium)
-- **Comment** — the specific Solaris threat each technique maps to (e.g. "SQL injection on patient records API — DREAD 9.4")
+- **Comment** — the specific Solaris threat each technique maps to (e.g. "SQL injection on patient records API — DREAD 9.8")
 - **Tactic context** — each technique is pinned to its correct ATT&CK tactic column
 
 ### How to import it into ATT&CK Navigator
@@ -212,7 +212,7 @@ ATT&CK Navigator is a free, browser-based tool maintained by MITRE. No account o
 2. Click **"Open Existing Layer"**
 3. Select **"Upload from local"**
 4. Choose `reports/solaris-layer.json` from this repository
-5. The matrix will load showing all 21 mapped techniques highlighted across 10 ATT&CK tactics
+5. The matrix will load showing all 31 mapped techniques highlighted across 10 ATT&CK tactics
 
 ### What you will see
 
@@ -257,14 +257,14 @@ This section documents how this threat model would be extended in a real engagem
 ## Skills Demonstrated
 
 ### Security Engineering
-- **Threat Modelling (STRIDE):** Systematic identification and categorisation of 25 threats across all six STRIDE categories applied to a realistic cloud architecture
-- **Risk Scoring (DREAD):** Quantitative risk scoring enabling priority-ordered remediation — the highest-scoring threat (SQLi, 9.4) was identified as a pre-launch blocker
+- **Threat Modelling (STRIDE):** Systematic identification and categorisation of 31 threats across all six STRIDE categories applied to a realistic cloud architecture
+- **Risk Scoring (DREAD):** Quantitative risk scoring enabling priority-ordered remediation — the highest-scoring threat (SQLi, 9.8) was identified as a pre-launch blocker
 - **Attack Tree Analysis:** Multi-path attacker goal decomposition with AND/OR node logic used to identify the lowest-effort attack path (credential stuffing, zero skill required)
 - **MITRE ATT&CK Mapping:** Every threat mapped to specific ATT&CK techniques, with a Navigator layer file for visual tactic coverage review
 
 ### DevSecOps & Secure Architecture
 - **Security-by-design:** Controls recommended at the architecture stage, not as afterthoughts — demonstrating shift-left security thinking
-- **NIST CSF Control Mapping:** All 25 threats mapped to NIST CSF functions (Identify, Protect, Detect, Respond, Recover) with implementation status tracked
+- **NIST CSF Control Mapping:** All 31 threats mapped to NIST CSF functions (Identify, Protect, Detect, Respond, Recover) with implementation status tracked
 - **Compliance Awareness:** NHS DSPT mandatory standards, UK GDPR Article 32, and ICO 72-hour breach notification obligations (Article 33) applied throughout
 - **Immutable Infrastructure Security:** AWS-specific recommendations including S3 Object Lock, CloudTrail log integrity, and VPC flow log analysis
 
@@ -292,10 +292,10 @@ complete-threat-model-for-healthcare-application/
     ├── threat-model-report.md                   # Full consolidated threat model report
     ├── solaris-layer.json                        # ATT&CK Navigator layer — import at mitre-attack.github.io/attack-navigator
     └── analyses/
-        ├── stride-threats.md                    # STRIDE threat catalogue (25 threats)
-        ├── mitre-mapping.md                     # MITRE ATT&CK technique mapping
+        ├── stride-threats.md                    # STRIDE threat catalogue (31 threats)
+        ├── mitre-mapping.md                     # MITRE ATT&CK technique mapping (31 threats)
         ├── kill-chain-analysis.md               # Cyber Kill Chain per attack scenario
-        ├── risk-register.md                     # DREAD-scored risk register
+        ├── risk-register.md                     # DREAD-scored risk register (31 threats)
         └── security-control-mapping.md          # NIST CSF control mapping and gap analysis
 ```
 
