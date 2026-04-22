@@ -98,7 +98,7 @@ than simple Likelihood × Impact.
 
 ## Full Risk Register
 
-> All 21 STRIDE threats scored. Sorted by Risk Score (highest first).
+> All 31 STRIDE threats scored. Sorted by Risk Score (highest first).
 
 | ID | Threat | STRIDE | Likelihood | Impact | Score | Priority | Deadline |
 |----|--------|--------|:----------:|:------:|:-----:|----------|----------|
@@ -109,23 +109,29 @@ than simple Likelihood × Impact.
 | I4 | Unencrypted Data in Transit | I | 3 | 5 | **15** | 🟠 High | Pre-launch |
 | I5 | Exposed Backup Files | I | 3 | 5 | **15** | 🟠 High | Pre-launch |
 | S2 | Fake Doctor Accounts | S | 3 | 5 | **15** | 🟠 High | 30 days |
-| T2 | Prescription Alteration | T | 2 | 5 | **10** | 🟠 High | 30 days |
-| T5 | Vitals Data Tampering | T | 2 | 5 | **10** | 🟠 High | 30 days |
 | E1 | Patient → Doctor Privilege | E | 3 | 4 | **12** | 🟠 High | 30 days |
 | T1 | Patient Record Modification | T | 3 | 4 | **12** | 🟠 High | 30 days |
 | I2 | Excessive Data Return | I | 4 | 3 | **12** | 🟠 High | 30 days |
+| I6 | PHI in Logs | I | 3 | 4 | **12** | 🟠 High | 30 days |
+| E2 | Doctor → Admin Privilege | E | 2 | 5 | **10** | 🟠 High | 30 days |
+| T2 | Prescription Alteration | T | 2 | 5 | **10** | 🟠 High | 30 days |
+| T5 | Vitals Data Tampering | T | 2 | 5 | **10** | 🟠 High | 30 days |
 | S5 | Lab Result Spoofing | S | 2 | 5 | **10** | 🟠 High | 30 days |
-| T3 | Audit Log Tampering | T | 2 | 4 | **8** | 🟡 Medium | 90 days |
 | D1 | DDoS Attack | D | 3 | 3 | **9** | 🟡 Medium | 90 days |
 | D2 | Database Exhaustion | D | 3 | 3 | **9** | 🟡 Medium | 90 days |
 | E5 | IDOR — Other Patient Records | E | 3 | 3 | **9** | 🟡 Medium | 90 days |
+| T4 | Claims Manipulation | T | 3 | 3 | **9** | 🟡 Medium | 90 days |
+| D5 | Rx Service Overload | D | 3 | 3 | **9** | 🟡 Medium | 90 days |
+| T3 | Audit Log Tampering | T | 2 | 4 | **8** | 🟡 Medium | 90 days |
 | S3 | Token Forgery | S | 2 | 4 | **8** | 🟡 Medium | 90 days |
 | R5 | Export Audit Gap | R | 2 | 4 | **8** | 🟡 Medium | 90 days |
+| R3 | Permission Change Denial | R | 2 | 4 | **8** | 🟡 Medium | 90 days |
+| I3 | Verbose Error Messages | I | 3 | 2 | **6** | 🟡 Medium | 90 days |
+| D3 | Storage Exhaustion | D | 3 | 2 | **6** | 🟡 Medium | 90 days |
 | R1 | Prescription Denial | R | 2 | 3 | **6** | 🟡 Medium | 90 days |
 | S4 | MITM on Insurance API | S | 2 | 3 | **6** | 🟡 Medium | 90 days |
-| D3 | Storage Exhaustion | D | 3 | 2 | **6** | 🟡 Medium | 90 days |
+| R4 | Claim Receipt Denial | R | 2 | 3 | **6** | 🟡 Medium | 90 days |
 | D4 | Mass Account Lockout | D | 2 | 2 | **4** | 🟢 Low | Backlog |
-| I3 | Verbose Error Messages | I | 3 | 2 | **6** | 🟡 Medium | 90 days |
 | R2 | Patient Access Denial | R | 1 | 3 | **3** | 🟢 Low | Backlog |
 
 ---
@@ -212,10 +218,10 @@ than simple Likelihood × Impact.
 ## Risk Distribution
 
 ```mermaid
-pie title Risk Distribution — 25 Threats
+pie title Risk Distribution — 31 Threats
     "Critical (16-25)" : 2
-    "High (10-15)" : 11
-    "Medium (5-9)" : 10
+    "High (10-15)" : 13
+    "Medium (5-9)" : 14
     "Low (1-4)" : 2
 ```
 
@@ -248,9 +254,11 @@ pie title Risk Distribution — 25 Threats
 | 8 | E1 | Privilege escalation | 12 | RBAC audit — server-side check on every API | Backend |
 | 9 | T1 | Record modification | 12 | Field-level hashing, write audit logs | Backend |
 | 10 | I2 | Excessive data return | 12 | API field allowlists, response filtering | Backend |
-| 11 | T2 | Prescription alteration | 10 | Digital Rx signatures, immutable Rx log | Backend |
-| 12 | T5 | Vitals tampering | 10 | Sensor signing, threshold anomaly alerts | Backend |
-| 13 | S5 | Lab result spoofing | 10 | mTLS + result signing with lab systems | DevOps |
+| 11 | I6 | PHI in logs | 12 | Log scrubbing rules, PII-aware logging libraries | Backend |
+| 12 | E2 | Doctor → Admin privilege | 10 | Separate admin accounts, MFA for admin actions | Backend |
+| 13 | T2 | Prescription alteration | 10 | Digital Rx signatures, immutable Rx log | Backend |
+| 14 | T5 | Vitals tampering | 10 | Sensor signing, threshold anomaly alerts | Backend |
+| 15 | S5 | Lab result spoofing | 10 | mTLS + result signing with lab systems | DevOps |
 
 ---
 
@@ -258,16 +266,20 @@ pie title Risk Distribution — 25 Threats
 
 | # | ID | Threat | Score | Action | Owner |
 |---|----|--------|:-----:|--------|-------|
-| 14 | D1 | DDoS | 9 | WAF rate limiting + CloudFront CDN | DevOps |
-| 15 | D2 | DB exhaustion | 9 | Query timeouts, connection pool limits | DevOps |
-| 16 | E5 | IDOR | 9 | Server-side patient ownership checks | Backend |
-| 17 | T3 | Audit log tampering | 8 | Write-once audit DB, off-system backup | DevOps |
-| 18 | S3 | Token forgery | 8 | Short JWT expiry, token rotation | Backend |
-| 19 | R5 | Export audit gap | 8 | Mandatory export logging, DLP | Backend |
-| 20 | I3 | Verbose errors | 6 | Generic error messages in production | Backend |
-| 21 | D3 | Storage exhaustion | 6 | Upload quotas, storage monitoring | DevOps |
-| 22 | R1 | Prescription denial | 6 | Signed Rx approvals, timestamped logs | Backend |
-| 23 | S4 | MITM on insurance | 6 | Certificate pinning on insurance API | Backend |
+| 16 | D1 | DDoS | 9 | WAF rate limiting + CloudFront CDN | DevOps |
+| 17 | D2 | DB exhaustion | 9 | Query timeouts, connection pool limits | DevOps |
+| 18 | E5 | IDOR | 9 | Server-side patient ownership checks | Backend |
+| 19 | T4 | Claims manipulation | 9 | Payload signing, encrypted DB fields, reconciliation checks | Backend |
+| 20 | D5 | Rx service overload | 9 | Input validation, request rate limiting, queue depth monitoring | DevOps |
+| 21 | T3 | Audit log tampering | 8 | Write-once audit DB, off-system backup | DevOps |
+| 22 | S3 | Token forgery | 8 | Short JWT expiry, token rotation | Backend |
+| 23 | R5 | Export audit gap | 8 | Mandatory export logging, DLP | Backend |
+| 24 | R3 | Permission change denial | 8 | Admin action logging, dual-approval for privilege changes | Backend |
+| 25 | I3 | Verbose errors | 6 | Generic error messages in production | Backend |
+| 26 | D3 | Storage exhaustion | 6 | Upload quotas, storage monitoring | DevOps |
+| 27 | R1 | Prescription denial | 6 | Signed Rx approvals, timestamped logs | Backend |
+| 28 | S4 | MITM on insurance | 6 | Certificate pinning on insurance API | Backend |
+| 29 | R4 | Claim receipt denial | 6 | Signed receipts, message delivery acknowledgements | Backend |
 
 ---
 
@@ -275,8 +287,8 @@ pie title Risk Distribution — 25 Threats
 
 | # | ID | Threat | Score | Action |
 |---|----|--------|:-----:|--------|
-| 24 | D4 | Mass account lockout | 4 | Progressive lockout delays, CAPTCHA |
-| 25 | R2 | Patient access denial | 3 | Immutable access logs |
+| 30 | D4 | Mass account lockout | 4 | Progressive lockout delays, CAPTCHA |
+| 31 | R2 | Patient access denial | 3 | Immutable access logs |
 
 ---
 
@@ -295,7 +307,6 @@ by automated scanners within minutes of being misconfigured. This is why
 exploitability must be weighted alongside damage potential in any credible
 risk assessment.
 
-
 ---
 
 ## Glossary
@@ -308,4 +319,3 @@ risk assessment.
 | **Residual risk** | Risk that remains after all mitigations have been applied |
 | **Risk appetite** | The level of risk an organisation formally accepts as tolerable |
 | **Risk owner** | The individual accountable for remediating a specific risk |
-
