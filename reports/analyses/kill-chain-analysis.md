@@ -110,12 +110,13 @@ flowchart TD
 | Exploitation | Macro blocking, EDR on all endpoints | ✅ Implemented |
 | Installation | File integrity monitoring (FIM), SIEM rules for new accounts | ✅ Implemented |
 | C2 | Outbound firewall whitelist, DNS anomaly detection | ✅ Implemented |
-| Actions | Immutable encrypted backups — ransomware cannot destroy them | ✅ Implemented |
-| Actions | DLP alerts on bulk data transfer before encryption | ✅ Implemented |
+| Actions | Immutable encrypted backups — ransomware cannot destroy them | 🟡 Partial — S3 Object Lock not yet configured (GAP-11) |
+| Actions | DLP alerts on bulk data transfer before encryption | 🟡 Partial — no threshold configured yet (see I2 gap register) |
 
-> ✅ **Verdict:** This chain is broken at multiple stages. Even if Delivery
-> succeeds, the attack cannot complete because immutable backups make ransom
-> payment unnecessary, and DLP detects exfiltration before encryption.
+> ⚠️ **Verdict:** The chain is partially broken. Email sandbox and EDR stop
+> most delivery and exploitation attempts. However, immutable backups (GAP-11)
+> and DLP thresholds are not yet fully in place — ransomware that reaches the
+> Actions stage could still succeed until these gaps are closed.
 
 ---
 
@@ -189,17 +190,19 @@ Insider threats are uniquely difficult because:
 
 | Control | What it does | Status |
 |---------|-------------|--------|
-| **RBAC with data scope** | Doctor can only access their assigned patients' records | ✅ Implemented |
-| **IDOR prevention** | Server-side check: does this doctor own this patient ID? | ✅ Implemented |
-| **Immutable audit logs** | Every access logged with user, timestamp, resource | ✅ Implemented |
-| **DLP on exports** | Alert if >100 records downloaded in single session | ✅ Implemented |
+| **RBAC with data scope** | Doctor can only access their assigned patients' records | 🟡 Partial — not enforced server-side consistently (see E1) |
+| **IDOR prevention** | Server-side check: does this doctor own this patient ID? | 🟡 Partial — some endpoints rely on client-supplied role |
+| **Immutable audit logs** | Every access logged with user, timestamp, resource | 🟡 Partial — audit DB is not fully write-once yet (see T1) |
+| **DLP on exports** | Alert if >100 records downloaded in single session | 🟡 Partial — no threshold configured yet (see I2) |
 | **User Behaviour Analytics (UBA)** | Baseline normal behaviour, alert on deviations | 🟡 Planned |
 | **Privileged Access Management (PAM)** | Extra controls and logging on high-privilege accounts | 🟡 Planned |
 | **Regular access reviews** | Quarterly check: does this doctor still need this access? | 🟡 Planned |
 
-> ⚠️ **Verdict:** The chain is partially broken. RBAC and audit logging stop
-> most paths. UBA and PAM are the priority additions — without behavioural
-> analytics, a careful insider can still operate below detection thresholds.
+> ⚠️ **Verdict:** The chain is partially broken. RBAC partially limits access
+> but is not consistently enforced server-side. Audit logs exist but are not
+> yet write-once. DLP thresholds are not yet configured. UBA and PAM remain
+> planned. A careful insider can still operate below detection thresholds
+> until these gaps are remediated.
 
 ---
 
@@ -265,16 +268,20 @@ flowchart TD
 
 | Stage | Control in Place | Status |
 |-------|-----------------|--------|
-| Delivery | WAF with SQL injection rules | ✅ Implemented |
-| Exploitation | Parameterised queries — injection impossible | ✅ Implemented |
-| Exploitation | Verbose errors disabled — no SQL errors returned to client | ✅ Implemented |
-| Installation | DB user is SELECT-only — cannot create stored procedures | ✅ Implemented |
+| Delivery | WAF with SQL injection rules | ❌ Missing — not yet deployed (GAP-1) |
+| Exploitation | Parameterised queries / ORM | 🟡 Partial — ORM in use but some raw queries remain (GAP-1 dependency) |
+| Exploitation | Verbose errors disabled — no SQL errors returned to client | ❌ Missing — SQL errors still returned to client (GAP-2) |
+| Installation | DB user is SELECT-only — cannot create stored procedures | ❌ Missing — app DB user has DBA-level access (GAP-4) |
 | C2 | DB server in private VPC — no outbound internet | ✅ Implemented |
-| Actions | Audit logs write-once — deletion is impossible | ✅ Implemented |
+| Actions | Audit logs write-once — deletion is impossible | 🟡 Partial — audit DB not fully write-once yet (see T1) |
 
-> ✅ **Verdict:** This chain is broken at Stage 4. Parameterised queries
-> make SQL injection impossible regardless of WAF bypass. Defense-in-depth
-> means even if one layer fails, the next layer holds.
+> ⚠️ **Verdict:** This chain is **not yet broken**. The WAF is missing (GAP-1),
+> raw SQL queries remain exploitable, verbose error messages confirm injection
+> success to the attacker (GAP-2), and the app DB user holds DBA-level
+> privileges (GAP-4) enabling full database control and stored procedure
+> creation. All four of these are pre-launch Critical requirements.
+> Defense-in-depth cannot compensate while the foundational preventive
+> controls are absent.
 
 ---
 
@@ -376,7 +383,7 @@ flowchart TD
     --> Ex5["🔓 4. Exploitation
     2% success rate = 1,000 valid accounts compromised
     Patients reuse passwords from other breached sites
-    MFA not enforced — single credential sufficient"]
+    MFA not enforced for all users — single credential sufficient"]
     --> In5["🪝 5. Installation
     Changes account recovery email on compromised accounts
     Locks out legitimate patients
@@ -397,16 +404,17 @@ flowchart TD
 |-------|-----------------|--------|
 | Delivery | Rate limiting — max 5 login attempts per IP per minute | ✅ Implemented |
 | Delivery | CAPTCHA after 3 failed attempts | ✅ Implemented |
-| Exploitation | MFA required for all patient accounts | ✅ Implemented |
-| Exploitation | Breach password detection — check against HaveIBeenPwned database | 🟡 Planned |
+| Exploitation | MFA required for all patient accounts | 🟡 Partial — MFA enforced for admin accounts only, not all users (GAP-5) |
+| Exploitation | Breach password detection — check against HaveIBeenPwned database | 🟡 Planned (GAP-7) |
 | Installation | Email alert to patient on any account change | ✅ Implemented |
 | Actions | Geo-anomaly detection — alert if login from unusual country | 🟡 Planned |
 | Actions | Session binding — session tied to device fingerprint | 🟡 Planned |
 
-> ✅ **Verdict:** MFA is the decisive control here. Even with 100% valid
-> credentials, MFA means the attacker cannot log in. The planned
-> HaveIBeenPwned integration proactively forces password resets when
-> patient credentials appear in public breach databases.
+> ⚠️ **Verdict:** The chain is **partially broken**. Rate limiting and CAPTCHA
+> slow automated tools significantly. However, MFA is not yet enforced for all
+> patient accounts (GAP-5) — stolen credentials remain sufficient to access
+> non-admin patient accounts. Universal MFA enforcement is a pre-launch
+> Critical requirement and must be in place before go-live.
 
 ---
 
@@ -414,19 +422,25 @@ flowchart TD
 
 | Scenario | Chain Broken At | Verdict |
 |----------|----------------|---------|
-| Ransomware | Stage 3 (Delivery) — email sandbox | ✅ Broken |
-| Insider Threat | Stage 4 (Exploitation) — RBAC + IDOR prevention | ⚠️ Mostly broken |
-| SQL Injection | Stage 4 (Exploitation) — parameterised queries | ✅ Broken |
-| Supply Chain | Stage 3 (Delivery) — mTLS + result signing | ⚠️ Mostly broken |
-| Credential Stuffing | Stage 4 (Exploitation) — MFA | ✅ Broken |
+| Ransomware | Stage 3 (Delivery) — email sandbox | ⚠️ Partially broken — immutable backups and DLP incomplete |
+| Insider Threat | Stage 4 (Exploitation) — RBAC + IDOR prevention | ⚠️ Partially broken — RBAC/IDOR partial, DLP/UBA missing |
+| SQL Injection | Stage 4 (Exploitation) — parameterised queries | ⚠️ Partially broken — WAF missing, raw queries remain, DBA access (GAP-1/2/4) |
+| Supply Chain | Stage 3 (Delivery) — mTLS + result signing | ⚠️ Mostly broken — vendor assessment pending |
+| Credential Stuffing | Stage 4 (Exploitation) — MFA | ⚠️ Partially broken — MFA admin-only, patient accounts exposed (GAP-5) |
 
 ### Priority Gaps to Close
 
-1. 🟠 **UBA (User Behaviour Analytics)** — essential for detecting insider threats operating below detection thresholds
-2. 🟠 **Third-party vendor security assessment** — supply chain attacks bypass our controls if the vendor is compromised
-3. 🟡 **HaveIBeenPwned integration** — proactive breach detection on patient passwords
-4. 🟡 **Geo-anomaly detection** — catch account takeover from unusual locations
-5. 🟡 **Dual-doctor verification for life-critical results** — last line of defence against false lab data
+1. 🔴 **WAF deployment** — SQL injection chain currently unbroken without it (GAP-1)
+2. 🔴 **Universal MFA enforcement** — credential stuffing chain currently unbroken for patient accounts (GAP-5)
+3. 🔴 **DB least privilege** — app DB user must be restricted to SELECT-only (GAP-4)
+4. 🔴 **Verbose error suppression** — SQL errors confirm injection success to attackers (GAP-2)
+5. 🟠 **Immutable backups (S3 Object Lock)** — ransomware chain incomplete without this (GAP-11)
+6. 🟠 **DLP thresholds** — bulk export detection not yet active
+7. 🟠 **UBA (User Behaviour Analytics)** — essential for detecting insider threats operating below detection thresholds
+8. 🟠 **Third-party vendor security assessment** — supply chain attacks bypass our controls if the vendor is compromised
+9. 🟡 **HaveIBeenPwned integration** — proactive breach detection on patient passwords (GAP-7)
+10. 🟡 **Geo-anomaly detection** — catch account takeover from unusual locations
+11. 🟡 **Dual-doctor verification for life-critical results** — last line of defence against false lab data
 
 ---
 
