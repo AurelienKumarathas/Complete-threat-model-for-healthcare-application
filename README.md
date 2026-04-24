@@ -1,5 +1,5 @@
 # Complete-threat-model-for-healthcare-application
-Healthcare platform threat model using STRIDE, MITRE ATT&CK, Cyber Kill Chain, attack trees, DREAD risk scoring, and NIST CSF control mapping. 25 threats identified across 6 categories.
+Healthcare platform threat model using STRIDE, MITRE ATT&CK, Cyber Kill Chain, attack trees, DREAD risk scoring, and NIST CSF control mapping. 31 threats identified across 6 categories.
 
 # Complete Threat Model
 
@@ -9,13 +9,13 @@ Healthcare platform threat model using STRIDE, MITRE ATT&CK, Cyber Kill Chain, a
 ![NIST CSF](https://img.shields.io/badge/Standard-NIST%20CSF-green?style=for-the-badge)
 ![NHS DSPT](https://img.shields.io/badge/Compliance-NHS%20DSPT-0072CE?style=for-the-badge)
 
-> *I built this to show how I'd approach threat modelling on a healthcare system — working through 25 threats across the full attack surface, mapping each one to MITRE ATT&CK, scoring by risk, and tying everything back to what actually needs fixing before go-live. The platform is fictional; the methodology and findings reflect what I'd produce on a real engagement.*
+> *I built this to show how I'd approach threat modelling on a healthcare system — working through 31 threats across the full attack surface, mapping each one to MITRE ATT&CK, scoring by risk, and tying everything back to what actually needs fixing before go-live. The platform is fictional; the methodology and findings reflect what I'd produce on a real engagement.*
 
 ---
 
 ## Executive Summary
 
-Solaris Care Connect 360 is a fictional cloud-native healthcare platform built on AWS, handling patient appointments, medical records, and third-party lab integrations. Twenty-five threats were identified, scored by risk severity, and mapped to real attacker techniques using the MITRE ATT&CK framework.
+Solaris Care Connect 360 is a fictional cloud-native healthcare platform built on AWS, handling patient appointments, medical records, and third-party lab integrations. Thirty-one threats were identified, scored by risk severity, and mapped to real attacker techniques using the MITRE ATT&CK framework.
 
 The three most critical findings were: no web application firewall on the patient records API (a single SQL injection request could expose the entire database); multi-factor authentication not enforced for patient accounts (vulnerable to automated credential stuffing with no technical skill required); and cloud backups not configured with tamper protection (a ransomware attack could destroy recovery capability entirely). All three were assessed as pre-launch blockers.
 
@@ -135,16 +135,16 @@ flowchart TD
 
 ## Threat Coverage
 
-**25 threats identified** across 6 STRIDE categories:
+**31 threats identified** across 6 STRIDE categories:
 
 | STRIDE Category | Threats Found | Highest DREAD Score | Status |
 |----------------|:-------------:|:-------------------:|--------|
-| **S** — Spoofing | 4 | 8.2 | 🟡 Partial controls |
+| **S** — Spoofing | 5 | 8.2 | 🟡 Partial controls |
 | **T** — Tampering | 5 | 9.1 | 🔴 Gap identified |
-| **R** — Repudiation | 3 | 7.4 | 🟡 Partial controls |
+| **R** — Repudiation | 5 | 7.4 | 🟡 Partial controls |
 | **I** — Information Disclosure | 6 | 9.4 | 🔴 Critical gap |
-| **D** — Denial of Service | 4 | 7.8 | 🟢 Controls in place |
-| **E** — Elevation of Privilege | 3 | 8.6 | 🔴 Gap identified |
+| **D** — Denial of Service | 5 | 7.8 | 🟢 Controls in place |
+| **E** — Elevation of Privilege | 5 | 8.6 | 🔴 Gap identified |
 
 ### Top 5 Critical Threats
 
@@ -266,14 +266,14 @@ This section documents how this threat model would be extended in a real engagem
 ## Skills Demonstrated
 
 ### Security Engineering
-- **Threat Modelling (STRIDE):** Systematic identification and categorisation of 25 threats across all six STRIDE categories applied to a realistic cloud architecture
+- **Threat Modelling (STRIDE):** Systematic identification and categorisation of 31 threats across all six STRIDE categories applied to a realistic cloud architecture
 - **Risk Scoring (DREAD):** Quantitative risk scoring enabling priority-ordered remediation — the highest-scoring threat (SQLi, 9.4) was identified as a pre-launch blocker
 - **Attack Tree Analysis:** Multi-path attacker goal decomposition with AND/OR node logic used to identify the lowest-effort attack path (credential stuffing, zero skill required)
 - **MITRE ATT&CK Mapping:** Every threat mapped to specific ATT&CK techniques, with a Navigator layer file for visual tactic coverage review
 
 ### DevSecOps & Secure Architecture
 - **Security-by-design:** Controls recommended at the architecture stage, not as afterthoughts — demonstrating shift-left security thinking
-- **NIST CSF Control Mapping:** All 25 threats mapped to NIST CSF functions (Identify, Protect, Detect, Respond, Recover) with implementation status tracked
+- **NIST CSF Control Mapping:** All 31 threats mapped to NIST CSF functions (Identify, Protect, Detect, Respond, Recover) with implementation status tracked
 - **Compliance Awareness:** NHS DSPT mandatory standards, UK GDPR Article 32, and ICO 72-hour breach notification obligations (Article 33) applied throughout
 - **Immutable Infrastructure Security:** AWS-specific recommendations including S3 Object Lock, CloudTrail log integrity, and VPC flow log analysis
 
@@ -290,6 +290,7 @@ This section documents how this threat model would be extended in a real engagem
 complete-threat-model-for-healthcare-application/
 │
 ├── README.md                                    # Project overview and documentation
+├── LICENSE                                      # MIT Licence
 │
 ├── diagrams/
 │   ├── architecture.md                          # System architecture and trust boundaries
@@ -301,7 +302,7 @@ complete-threat-model-for-healthcare-application/
     ├── threat-model-report.md                   # Full consolidated threat model report
     ├── solaris-layer.json                        # ATT&CK Navigator layer — import at mitre-attack.github.io/attack-navigator
     └── analyses/
-        ├── stride-threats.md                    # STRIDE threat catalogue (25 threats)
+        ├── stride-threats.md                    # STRIDE threat catalogue (31 threats)
         ├── mitre-mapping.md                     # MITRE ATT&CK technique mapping
         ├── kill-chain-analysis.md               # Cyber Kill Chain per attack scenario
         ├── risk-register.md                     # DREAD-scored risk register

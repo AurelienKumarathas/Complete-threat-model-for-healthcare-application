@@ -15,7 +15,7 @@
 |----|--------|-----------|-------------|----------|------------|--------------|
 | S1 | Credential Theft | Auth Service | Attacker steals patient credentials via phishing | 🟠 High | MFA enforcement, phishing-resistant login, user awareness training | T1566 - Phishing |
 | S2 | Fake Doctor Accounts | Admin Portal | Attacker creates unauthorised doctor accounts to access PHI | 🔴 Critical | Admin approval workflow, identity verification, RBAC enforcement | T1136 - Create Account |
-| S3 | Token Forgery | API Gateway | API requests made with stolen or forged JWT tokens | 🟠 High | Short JWT expiry, token rotation, signature validation | T1539 - Steal Web Session Cookie |
+| S3 | Token Forgery | API Gateway | API requests made with stolen or forged JWT tokens | 🟠 High | Short JWT expiry, token rotation, signature validation | T1528 - Steal Application Access Token |
 | S4 | MITM on Insurance API | External API | Man-in-the-middle attack on insurance provider communication | 🟡 Medium | Mutual TLS (mTLS), certificate pinning, API key rotation | T1557 - Adversary-in-the-Middle |
 | S5 | Lab Result Spoofing | Lab Integration | Fake lab results injected via compromised lab feed | 🔴 Critical | mTLS with lab systems, result signing, anomaly detection | T1195 - Supply Chain Compromise |
 
@@ -93,6 +93,9 @@
 |----------|-------|------------|
 | 🔴 Critical | 12 | S2, S5, T1, T2, T5, I1, I4, I5, E1, E2, E3, E4 |
 | 🟠 High | 13 | S1, S3, T3, T4, R1, R3, R5, I2, I6, D1, D2, D5, E5 |
-| 🟡 Medium | 6 | S4, R2, R4, I3, D3, D4 |
+| 🟡 Medium | 4 | S4, R2, R4, I3 |
+| 🟢 Low | 2 | D3, D4 |
 
+> **Total: 31 threats** across 6 STRIDE categories.
+>
 > ⚠️ All Critical threats must be mitigated before production deployment. High threats must have a remediation plan within 30 days.

@@ -109,11 +109,11 @@ worth 10x more than credit card data on the dark web.
 
 ```mermaid
 flowchart LR
-    A["\ud83c\udfa3 T1566.001\nSpearphishing\nInitial Access"] -->|Stolen credentials| B["\ud83d\udc64 T1078\nValid Accounts\nPrivilege Escalation"]
-    B -->|Explore system| C["\ud83d\udd0d T1083\nFile Discovery\nDiscovery"]
-    C -->|Locate PHI| D["\ud83d\udcc2 T1213\nData from Repositories\nCollection"]
-    D -->|Stage data| E["\ud83d\udce6 T1005\nLocal Data Staging\nCollection"]
-    E -->|Send to attacker| F["\ud83d\udce1 T1567\nExfiltration Over Web\nExfiltration"]
+    A["🎣 T1566.001\nSpearphishing\nInitial Access"] -->|Stolen credentials| B["👤 T1078\nValid Accounts\nPrivilege Escalation"]
+    B -->|Explore system| C["🔍 T1083\nFile Discovery\nDiscovery"]
+    C -->|Locate PHI| D["📂 T1213\nData from Repositories\nCollection"]
+    D -->|Stage data| E["📦 T1005\nLocal Data Staging\nCollection"]
+    E -->|Send to attacker| F["📡 T1567\nExfiltration Over Web\nExfiltration"]
 ```
 
 **What stops this chain at Solaris:**
@@ -130,10 +130,10 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    A["\ud83d\udd11 T1078\nValid Accounts\nInitial Access"] -->|Access records| B["\u270f\ufe0f T1565.001\nRecord Tampering\nImpact"]
-    B -->|Cover tracks| C["\ud83e\uddf9 T1070\nIndicator Removal\nDefense Evasion"]
-    C -->|Bulk export| D["\u2601\ufe0f T1530\nCloud Storage Access\nCollection"]
-    D -->|External transfer| E["\ud83d� T1048\nAlt Protocol Exfil\nExfiltration"]
+    A["🔑 T1078\nValid Accounts\nInitial Access"] -->|Access records| B["✏️ T1565.001\nRecord Tampering\nImpact"]
+    B -->|Cover tracks| C["🧹 T1070\nIndicator Removal\nDefense Evasion"]
+    C -->|Bulk export| D["☁️ T1530\nCloud Storage Access\nCollection"]
+    D -->|External transfer| E["📤 T1048\nAlt Protocol Exfil\nExfiltration"]
 ```
 
 **What stops this chain at Solaris:**
@@ -149,10 +149,10 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    A["\ud83d\udce7 T1566\nPhishing Email\nInitial Access"] -->|Execute payload| B["\ud83d\udcbb T1059\nCommand Execution\nExecution"]
-    B -->|Create backdoor| C["\ud83d\udc65 T1136\nCreate Account\nPersistence"]
-    C -->|Move across systems| D["\u2194\ufe0f T1021\nLateral Movement\nLateral Movement"]
-    D -->|Encrypt all data| E["\ud83d\udd12 T1486\nData Encrypted for Impact\nImpact"]
+    A["📧 T1566\nPhishing Email\nInitial Access"] -->|Execute payload| B["💻 T1059\nCommand Execution\nExecution"]
+    B -->|Create backdoor| C["👥 T1136\nCreate Account\nPersistence"]
+    C -->|Move across systems| D["↔️ T1021\nLateral Movement\nLateral Movement"]
+    D -->|Encrypt all data| E["🔒 T1486\nData Encrypted for Impact\nImpact"]
 ```
 
 **What stops this chain at Solaris:**
@@ -168,10 +168,10 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    A["\ud83d\udc89 T1190\nExploit Public App\nInitial Access"] -->|Extract patient data| B["\ud83d\uddc4\ufe0f T1213\nData from Repositories\nCollection"]
-    B -->|Escalate to DBA| C["\u2b06\ufe0f T1078\nValid Accounts\nPrivilege Escalation"]
-    C -->|Modify records| D["\u270f\ufe0f T1565.001\nStored Data Manipulation\nImpact"]
-    D -->|Delete audit trail| E["\ud83e\uddf9 T1070\nIndicator Removal\nDefense Evasion"]
+    A["💉 T1190\nExploit Public App\nInitial Access"] -->|Extract patient data| B["🗄️ T1213\nData from Repositories\nCollection"]
+    B -->|Escalate to DBA| C["⬆️ T1078\nValid Accounts\nPrivilege Escalation"]
+    C -->|Modify records| D["✏️ T1565.001\nStored Data Manipulation\nImpact"]
+    D -->|Delete audit trail| E["🧹 T1070\nIndicator Removal\nDefense Evasion"]
 ```
 
 **What stops this chain at Solaris:**
@@ -187,10 +187,10 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    A["\ud83d\udd17 T1195\nSupply Chain Compromise\nInitial Access"] -->|Inject fake results| B["\ud83d\udccb T1565.002\nTransmitted Data Manipulation\nImpact"]
-    B -->|Appear legitimate| C["\ud83d\udc64 T1078\nValid Accounts\nDefense Evasion"]
-    C -->|Doctor acts on bad data| D["\u26a0\ufe0f T1565.001\nStored Data Manipulation\nImpact"]
-    D -->|Patient harmed| E["\ud83c\udfe5 Clinical Impact\nPatient Safety Risk"]
+    A["🔗 T1195\nSupply Chain Compromise\nInitial Access"] -->|Inject fake results| B["📋 T1565.002\nTransmitted Data Manipulation\nImpact"]
+    B -->|Appear legitimate| C["👤 T1078\nValid Accounts\nDefense Evasion"]
+    C -->|Doctor acts on bad data| D["⚠️ T1565.001\nStored Data Manipulation\nImpact"]
+    D -->|Patient harmed| E["🏥 Clinical Impact\nPatient Safety Risk"]
 ```
 
 **What stops this chain at Solaris:**
