@@ -26,6 +26,15 @@ Risk is calculated using a simple formula:
 This gives every threat a number from 1–25, which determines how urgently
 it needs to be fixed.
 
+### Two views of "Critical" severity
+
+This register uses **Likelihood × Impact (L×I)** thresholds for engineering
+prioritisation, where Critical = score ≥ 16. The STRIDE threat register
+(`stride-threats.md`) uses **clinical severity labels**, where any threat
+with Impact = 5 (catastrophic PHI breach or patient harm) is labelled Critical
+regardless of likelihood. This is standard in healthcare risk frameworks,
+where low-probability, catastrophic events still demand pre-launch mitigation.
+
 ### Likelihood Scale
 
 | Score | Label | Meaning |
@@ -225,7 +234,7 @@ pie title Risk Distribution — 31 Threats (Likelihood × Impact scoring)
     "Low (1-4)" : 2
 ```
 
-> **📌 Note on Critical count — two scoring systems in use:**
+> **📌 Note on Critical count — see "Two views of \"Critical\" severity" above:**
 > This register uses **Likelihood × Impact (L×I)** thresholds, where Critical
 > = score ≥ 16. By this measure, **2 threats** are Critical (I1 at 20, S1 at 16).
 >
