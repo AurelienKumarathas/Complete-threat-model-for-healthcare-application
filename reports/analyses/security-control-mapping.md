@@ -193,6 +193,46 @@ Access Control, sub-control 4). These are used throughout this document.
 
 ---
 
+## Detection Examples for Top Threats
+
+> Illustrative detection patterns that would be implemented in a SIEM such as Splunk or Elastic.
+
+- **I1 — SQL Injection**  
+  - Alert on spike in HTTP 500/SQL error responses for patient-records endpoints per minute above normal baseline.  
+  - Alert on repeated requests containing SQL meta-characters (`, "`, `--`, `/*`, `UNION SELECT`) in query parameters or JSON bodies from a single IP.
+- **S1 — Credential Theft / Stuffing**  
+  - Alert when a single IP attempts logins against >50 distinct accounts within 5 minutes, regardless of success.  
+  - Alert on successful logins from new country/ASN for an account within 24 hours of a failed burst from a different country.
+- **I5 — Exposed Backups**  
+  - Alert on any GET/HEAD request to backup bucket prefixes (e.g. `s3://solaris-backups/`) from principals outside the backup service role.  
+  - Weekly report of all principals that accessed backup objects, with thresholds for unusual volume per principal.
+- **E4 — Container Escape / Runtime Abuse**  
+  - Falco rules for detection of `nsenter`, `mount`, or modification of host paths from inside containers.  
+  - Alert on new outbound connections from containers to unusual external destinations (non-approved IP ranges or ports).
+- **S2 — Fake Doctor Accounts / Privilege Abuse**  
+  - Alert when a new doctor account is created without a corresponding onboarding record or GMC validation event.  
+  - Alert on any privilege change that elevates a user to an admin/doctor role outside business hours.
+
+These examples are deliberately technology-agnostic so they can be translated into the specific query language of the chosen SIEM.
+
+---
+
+## GDPR / NHS DSPT Mapping — Top Critical Threats
+
+> How the highest-priority threats align to GDPR Article 32, NHS DSPT, and NIST CSF.
+
+| Threat ID | Summary | GDPR Article 32 theme | Example NHS DSPT area | NIST CSF |
+|-----------|---------|------------------------|------------------------|----------|
+| I1 | SQL injection exposing PHI | Confidentiality of patient data; protection against unauthorised access | Data security, application security controls | PR.DS, PR.AC, DE.CM |
+| S1 | Credential theft via phishing | Access control, user authentication, protection against unauthorised access | Staff training, user access controls | PR.AC, PR.AT, DE.AE |
+| I4 | Unencrypted data in transit | Encryption of personal data in transit, protection against interception | Network security, secure communications | PR.DS, PR.PT |
+| I5 | Exposed backup files | Integrity and availability of processing systems and services; secure backups | Business continuity, backup and restore | PR.DS, RC.RP |
+| E4 | Container escape to host | System and service security; isolation of workloads processing personal data | Technical security, infrastructure controls | PR.PT, DE.CM |
+
+This table is not exhaustive but shows how technical risks translate directly into regulatory and NHS DSPT expectations.
+
+---
+
 ## Gap Analysis — Complete Register
 
 > All control gaps identified, consolidated and prioritised.
